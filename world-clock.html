@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界时钟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .clock-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .clock-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .city-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .timezone {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .time {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .date {
+            font-size: 1rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .clock-card {
+                padding: 1.5rem;
+            }
+
+            .time {
+                font-size: 2.25rem;
+            }
+
+            .city-name {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 世界时钟</h1>
+    <div class="clock-container">
+        <div class="clock-card" data-timezone="Asia/Shanghai">
+            <div class="city-name">上海</div>
+            <div class="timezone">Asia/Shanghai</div>
+            <div class="time">--:--:--</div>
+            <div class="date">--</div>
+        </div>
+        <div class="clock-card" data-timezone="Europe/Stockholm">
+            <div class="city-name">哥德堡，瑞典</div>
+            <div class="timezone">Europe/Stockholm</div>
+            <div class="time">--:--:--</div>
+            <div class="date">--</div>
+        </div>
+        <div class="clock-card" data-timezone="Asia/Kolkata">
+            <div class="city-name">班加罗尔，印度</div>
+            <div class="timezone">Asia/Kolkata</div>
+            <div class="time">--:--:--</div>
+            <div class="date">--</div>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const cards = document.querySelectorAll('.clock-card');
+            
+            cards.forEach(card => {
+                const timezone = card.dataset.timezone;
+                const timeElement = card.querySelector('.time');
+                const dateElement = card.querySelector('.date');
+                
+                const now = new Date();
+                
+                // Format time using Intl.DateTimeFormat
+                const timeFormatter = new Intl.DateTimeFormat('zh-CN', {
+                    timeZone: timezone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+                
+                // Format date using Intl.DateTimeFormat
+                const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+                    timeZone: timezone,
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                timeElement.textContent = timeFormatter.format(now);
+                dateElement.textContent = dateFormatter.format(now);
+            });
+        }
+
+        // Update immediately
+        updateTime();
+        
+        // Update every second
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
